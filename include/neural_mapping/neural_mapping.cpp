@@ -782,7 +782,7 @@ bool NeuralSLAM::build_occ_map() {
         auto unknown_points = utils::vec_eigen_to_tensor(unknown_cells);
 
         // Filter unknown points based on octree validity for efficiency, i
-        if (occupancy_points.numel() > 0) {
+        if (occupancy_points.numel() > 0 && unknown_points.size(0) > 0) {
           // Move unknown points to GPU for processing
           unknown_points = unknown_points.cuda();
 
@@ -799,8 +799,12 @@ bool NeuralSLAM::build_occ_map() {
                                 .view({-1, 8})
                                 .any(1);
 
-          // Filter points using the mask
-          unknown_points = unknown_points.index({valid_mask}).cpu();
+          // Filter points using the mask (guard against empty mask -- libtorch 2.7 throws on size-0 advanced index)
+          if (valid_mask.numel() > 0 && valid_mask.any().item<bool>()) {
+            unknown_points = unknown_points.index({valid_mask}).cpu();
+          } else {
+            unknown_points = torch::empty({0, 3}, unknown_points.options().device(torch::kCPU));
+          }
         }
         // Combine with existing occupancy points
         if (occupancy_points.numel() == 0) {

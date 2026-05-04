@@ -1,0 +1,59 @@
+%YAML:1.0
+
+base_config: "../base.yaml"
+scene_config: "fast_livo.yaml"
+
+iter_step: 20000
+
+trace_iter: 100
+
+leaf_sizes: 0.1
+fill_level: 1
+bce_sigma: 1.0
+sphere_trace_thr: 1e-3
+
+camera:
+   model: 1 # 0: pinhole; 1: equidistant
+   width: 1280
+   height: 720
+
+   fx: 868.1137481375785
+   fy: 867.7965691684615
+   cx: 644.0291010828827
+   cy: 369.68502498929234
+
+   d0: 0.4240986039693088
+   d1: 0.2714224784303239
+   d2: -2.052081423157285
+   d3: 3.1937347770136015
+   d4: 0.0
+
+extrinsic:
+   # lidar -> camera (from your Kalibr Rcl|Pcl)
+   T_C_L: !!opencv-matrix
+      rows: 4
+      cols: 4
+      dt: d
+      data: [ -0.002887, -0.999996, -0.000450,  0.021341,
+               0.453158, -0.000907, -0.891430, -0.208215,
+               0.891426, -0.002777,  0.453158, -0.106697,
+               0.0,       0.0,       0.0,       1.0 ]
+
+   # lidar -> base(imu)  (Mid-360 factory IMU offset)
+   T_B_L: !!opencv-matrix
+      rows: 4
+      cols: 4
+      dt: d
+      data: [ 1.0, 0.0, 0.0, -0.011,
+              0.0, 1.0, 0.0, -0.02329,
+              0.0, 0.0, 1.0,  0.04412,
+              0.0, 0.0, 0.0,  1.0 ]
+
+map:
+   map_origin: !!opencv-matrix
+      rows: 1
+      cols: 3
+      dt: d
+      data: [ -0.73, -1.41, 0.90 ] # originally [ 0, 0, 0 ]
+
+   map_size: 30 # originally 20

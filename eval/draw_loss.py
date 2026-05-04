@@ -2,6 +2,8 @@
 # Usage: python3 draw_mem.py
 
 from argparse import ArgumentParser
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from pathlib import Path
 

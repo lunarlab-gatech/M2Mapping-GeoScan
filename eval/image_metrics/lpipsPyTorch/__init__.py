@@ -5,7 +5,7 @@ from .modules.lpips import LPIPS
 
 class Lpips:
     def __init__(self, net_type: str = "alex", version: str = "0.1"):
-        self.criterion = LPIPS(net_type, version).cuda()
+        self.criterion = LPIPS(net_type, version).cpu()
 
     def forward(self, x: torch.Tensor, y: torch.Tensor):
         r"""Function that measures

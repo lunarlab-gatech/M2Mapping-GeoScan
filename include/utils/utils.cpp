@@ -596,7 +596,7 @@ torch::Tensor rot_to_quat(const torch::Tensor &rotation) {
   K[3][3] = Rxx + Ryy + Rzz;
   K /= 3.0;
 
-  auto eig_results = torch::linalg::eigh(K, "L");
+  auto eig_results = at::linalg_eigh(K, "L");
   auto eigvals = std::get<0>(eig_results);
   auto eigvecs = std::get<1>(eig_results);
 
