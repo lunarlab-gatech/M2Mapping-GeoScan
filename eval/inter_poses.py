@@ -65,13 +65,16 @@ def save_interpolated_poses(file_path, poses):
 
 
 @click.command()
-@click.option('--data_dir', type=str, required=True, help="输入姿态文件所在的目录")
-@click.option('--key_poses', type=str, required=False, help="指定的关键帧索引，格式为逗号分隔的整数，或使用 'all' 表示所有帧,或skip表示每隔多少帧")
-@click.option('--skip', type=int, default=5, help="每隔多少帧选取一个关键帧")
-@click.option('--n_out_poses', type=int, default=240, help="输出的插值姿态的数量")
-def interpolate_poses(data_dir, key_poses, n_out_poses, skip):
+@click.option('--data_dir', type=str, required=True, help="directory containing color_poses.txt")
+@click.option('--key_poses', type=str, required=False, help="comma-separated key-frame indices, 'all', or 'skip'")
+@click.option('--skip', type=int, default=5, help="key-frame stride when --key_poses=skip")
+@click.option('--n_out_poses', type=int, default=240, help="total interpolated poses to output")
+@click.option('--output_file', type=str, default=None, help="explicit output path; default is <data_dir>/inter_color_poses.txt")
+def interpolate_poses(data_dir, key_poses, n_out_poses, skip, output_file):
     input_file = os.path.join(data_dir, 'color_poses.txt')
-    output_file = os.path.join(data_dir, 'inter_color_poses.txt')
+    if output_file is None:
+        output_file = os.path.join(data_dir, 'inter_color_poses.txt')
+    os.makedirs(os.path.dirname(os.path.abspath(output_file)), exist_ok=True)
 
     # 读取姿态
     poses = load_poses(input_file)

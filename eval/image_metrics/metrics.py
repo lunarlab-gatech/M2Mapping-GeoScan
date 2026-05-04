@@ -25,8 +25,8 @@ from argparse import ArgumentParser
 def evaluate_render(renders_dir, gt_dir, fname, lpips_inferer: Lpips):
     render = Image.open(renders_dir / fname)
     gt = Image.open(gt_dir / fname)
-    render = tf.to_tensor(render).unsqueeze(0)[:, :3, :, :].cuda()
-    gt = tf.to_tensor(gt).unsqueeze(0)[:, :3, :, :].cuda()
+    render = tf.to_tensor(render).unsqueeze(0)[:, :3, :, :].cpu()
+    gt = tf.to_tensor(gt).unsqueeze(0)[:, :3, :, :].cpu()
 
     # [1, chaneel, H, W]
     return (
@@ -145,8 +145,7 @@ def evaluate(model_paths):
 
 
 if __name__ == "__main__":
-    device = torch.device("cuda:0")
-    torch.cuda.set_device(device)
+    device = torch.device("cpu")
 
     # Set up command line argument parser
     parser = ArgumentParser(description="Training script parameters")
